@@ -256,7 +256,7 @@ each level is indented by this amount."
                                 (with-current-buffer buffer
                                   (eq major-mode #'q-shell-mode)))))))))
   (when (called-interactively-p 'any) (display-buffer buffer))
-  (setq q-active-buffer buffer))
+  (setq q-active-buffer (get-buffer buffer)))
 
 (defun q-default-args ()
   "Build a list of default args out of the q-init customizable variables."
