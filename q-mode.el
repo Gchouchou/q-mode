@@ -1604,26 +1604,26 @@ This function never triggers I/O; it only reads from cached data."
 ;  (add-to-list 'hs-special-modes-alist
 ;               (list 'q-mode "{" "}" "/[ \t]*" nil nil)))
 
-(defun q-beginning-of-defun (&optional arg)
-  "Move backward to the beginning of a q function definition.
-With ARG, do it that many times."
-  (re-search-backward (concat "^" q-function-regex) nil 'move (or arg 1)))
+;(defun q-beginning-of-defun (&optional arg)
+;  "Move backward to the beginning of a q function definition.
+;With ARG, do it that many times."
+;  (re-search-backward (concat "^" q-function-regex) nil 'move (or arg 1)))
 
-(defun q-end-of-defun ()
-  "Move forward to the end of a q function definition.
-For brace-delimited functions, finds the closing } matching the opening {.
-For point-free definitions with no braces, moves to end of line."
-  (goto-char (line-beginning-position))
-  (if (re-search-forward "{" (line-end-position) t)
-      (progn (backward-char) (forward-sexp))
-    (end-of-line)))
+;(defun q-end-of-defun ()
+;  "Move forward to the end of a q function definition.
+;For brace-delimited functions, finds the closing } matching the opening {.
+;For point-free definitions with no braces, moves to end of line."
+;  (goto-char (line-beginning-position))
+;  (if (re-search-forward "{" (line-end-position) t)
+;      (progn (backward-char) (forward-sexp))
+;    (end-of-line)))
 
-(defun q-current-defun ()
-  "Return the name of the q function enclosing point, or nil.
-Used by `which-function-mode' and `add-log-current-defun-function'."
-  (save-excursion
-    (when (re-search-backward (concat "^" q-function-regex) nil t)
-      (match-string-no-properties 1))))
+;(defun q-current-defun ()
+;  "Return the name of the q function enclosing point, or nil.
+;Used by `which-function-mode' and `add-log-current-defun-function'."
+;  (save-excursion
+;    (when (re-search-backward (concat "^" q-function-regex) nil t)
+;      (match-string-no-properties 1))))
 
 ;;;###autoload
 (define-derived-mode q-mode prog-mode "Q-Script"
