@@ -1640,12 +1640,12 @@ Used by `which-function-mode' and `add-log-current-defun-function'."
   ;; enable imenu
   (setq-local imenu-generic-expression q-imenu-generic-expression)
   ;; which-function-mode
-  (setq-local add-log-current-defun-function #'q-current-defun)
-  (setq-local beginning-of-defun-function #'q-beginning-of-defun)
-  (setq-local end-of-defun-function #'q-end-of-defun)
+  ;(setq-local add-log-current-defun-function #'q-current-defun)
+  ;(setq-local beginning-of-defun-function #'q-beginning-of-defun)
+  ;(setq-local end-of-defun-function #'q-end-of-defun)
   ;; editor integrations
-  (add-hook 'completion-at-point-functions #'q-completion-at-point nil t)
-  (add-hook 'eldoc-documentation-functions #'q-eldoc-function nil t)
+  ;(add-hook 'completion-at-point-functions #'q-completion-at-point nil t)
+  ;(add-hook 'eldoc-documentation-functions #'q-eldoc-function nil t)
   (when (featurep 'xref)
     (add-hook 'xref-backend-functions #'q-xref-backend nil t))
   ;; Schedule rescans on save/revert rather than inline on every eldoc tick.
