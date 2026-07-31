@@ -150,7 +150,7 @@
 (require 'comint)
 (require 'compile)
 (require 'auth-source nil t)
-(require 'hideshow nil t)
+;(require 'hideshow nil t)
 (require 'project nil t)
 (require 'xref nil t)
 
@@ -1600,9 +1600,9 @@ This function never triggers I/O; it only reads from cached data."
    (list nil (concat "^" q-name-regex ":") 1))
   "Regular expressions to get q expressions into imenu.")
 
-(with-eval-after-load 'hideshow
-  (add-to-list 'hs-special-modes-alist
-               (list 'q-mode "{" "}" "/[ \t]*" nil nil)))
+;(with-eval-after-load 'hideshow
+;  (add-to-list 'hs-special-modes-alist
+;               (list 'q-mode "{" "}" "/[ \t]*" nil nil)))
 
 (defun q-beginning-of-defun (&optional arg)
   "Move backward to the beginning of a q function definition.
