@@ -914,76 +914,6 @@ Syntactic context (strings, comments) is handled by
    start end))
 
 
-;; flymake
-
-(defun q-flymake (report-fn &rest _args)
-  "Flymake backend using the q program.
-Takes a Flymake callback REPORT-FN as argument, as expected of a member
-of `flymake-diagnostic-functions'.  q evaluates source code while
-checking it; this backend therefore performs a runtime check.
-When `q-flymake-on-save' is nil, diagnostics are produced from the
-current buffer by checking a temporary file."
-  (when (process-live-p q--flymake-proc)
-    (kill-process q--flymake-proc))
-
-  (let ((source (current-buffer))
-        (file (buffer-file-name))
-        (default-directory (file-name-directory (buffer-file-name))))
-    (cond
-     ((not file)
-      (funcall report-fn nil))
-     ((and q-flymake-on-save (buffer-modified-p))
-      (funcall report-fn nil))
-     (t
-      (let ((input-file file))
-        (when (buffer-modified-p)
-          (save-restriction
-            (widen)
-            (setq input-file (make-temp-file "q-flymake-" nil ".q"))
-            (write-region (point-min) (point-max) input-file nil 'silent)))
-        ;; reset the `q--flymake-proc' process to a new q process
-        (setq
-         q--flymake-proc
-         (make-process
-          :name "q-flymake" :noquery t :connection-type 'pipe
-          :buffer (generate-new-buffer " *q-flymake*")
-          :command (list q-program input-file)
-          :sentinel
-          (lambda (proc _event)
-            ;; check that the process has exited (not just suspended)
-            (when (memq (process-status proc) '(exit signal))
-              (unwind-protect
-                  ;; only proceed if `proc' is the same as
-                  ;; `q--flymake-proc', which indicates that `proc' is
-                  ;; not an obsolete process
-                  (if (and (buffer-live-p source)
-                           (with-current-buffer source (eq proc q--flymake-proc)))
-                      (with-current-buffer (process-buffer proc)
-                        (goto-char (point-min))
-                        (cl-loop
-                         while (search-forward-regexp
-                                (concat
-                                 "^'[0-9.:T]* \\(.*\\)"  ; error message
-                                 "\\(?:.\\|\\\n\\)*\\\n" ; stack trace
-                                 "\\(" q--stack-frame-regexp "\\).*\\\n" ; line number
-                                 "\\( +^\\)$" ; carat showing column of error
-                                 )
-                                nil t)
-                         for msg = (match-string 1)
-                         for prefix = (match-string 2)
-                         for row = (string-to-number (match-string 4))
-                         for carat = (match-string 5)
-                         for col = (- (length carat) (length prefix))
-                         for (beg . end) = (flymake-diag-region source row col)
-                         when (and beg end)
-                         collect (flymake-make-diagnostic source beg end :error msg)
-                         into diags
-                         finally (funcall report-fn diags)))
-                    (flymake-log :warning "Canceling obsolete check %s" proc))
-                (when (and input-file (not (equal input-file file)))
-                  (ignore-errors (delete-file input-file)))
-                (kill-buffer (process-buffer proc))))))))
-        (process-send-eof q--flymake-proc)))))
 
 (defconst q-capf-core-words
   (let ((ht (make-hash-table :test #'equal)))
@@ -1718,7 +1648,6 @@ Used by `which-function-mode' and `add-log-current-defun-function'."
   (add-hook 'eldoc-documentation-functions #'q-eldoc-function nil t)
   (when (featurep 'xref)
     (add-hook 'xref-backend-functions #'q-xref-backend nil t))
-  (add-hook 'flymake-diagnostic-functions 'q-flymake nil t)
   ;; Schedule rescans on save/revert rather than inline on every eldoc tick.
   ;; Saves trigger an incremental rescan of the changed file only; out-of-band
   ;; disk changes (e.g. git pull) are detected and promote to a full rescan.
