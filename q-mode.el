@@ -1640,21 +1640,22 @@ Used by `which-function-mode' and `add-log-current-defun-function'."
   ;; enable imenu
   (setq-local imenu-generic-expression q-imenu-generic-expression)
   ;; which-function-mode
-  (setq-local add-log-current-defun-function #'q-current-defun)
-  (setq-local beginning-of-defun-function #'q-beginning-of-defun)
-  (setq-local end-of-defun-function #'q-end-of-defun)
+  ;(setq-local add-log-current-defun-function #'q-current-defun)
+  ;(setq-local beginning-of-defun-function #'q-beginning-of-defun)
+  ;(setq-local end-of-defun-function #'q-end-of-defun)
   ;; editor integrations
-  (add-hook 'completion-at-point-functions #'q-completion-at-point nil t)
-  (add-hook 'eldoc-documentation-functions #'q-eldoc-function nil t)
+  ;(add-hook 'completion-at-point-functions #'q-completion-at-point nil t)
+  ;(add-hook 'eldoc-documentation-functions #'q-eldoc-function nil t)
   (when (featurep 'xref)
     (add-hook 'xref-backend-functions #'q-xref-backend nil t))
   ;; Schedule rescans on save/revert rather than inline on every eldoc tick.
   ;; Saves trigger an incremental rescan of the changed file only; out-of-band
   ;; disk changes (e.g. git pull) are detected and promote to a full rescan.
-  (add-hook 'after-save-hook #'q--schedule-rescan nil t)
-  (add-hook 'after-revert-hook #'q--schedule-rescan nil t)
+  ;(add-hook 'after-save-hook #'q--schedule-rescan nil t)
+  ;(add-hook 'after-revert-hook #'q--schedule-rescan nil t)
   ;; Evict the shared project cache when the last buffer for a project closes.
-  (add-hook 'kill-buffer-hook #'q--maybe-evict-project-cache nil t))
+  ;(add-hook 'kill-buffer-hook #'q--maybe-evict-project-cache nil t)
+  )
 
 ;; indentation
 
