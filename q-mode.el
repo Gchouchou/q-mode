@@ -668,7 +668,7 @@ With a prefix argument FORCE, re-scan all files regardless of mtime."
     (define-key map "\C-c\C-\\"  'q-kill-q-buffer)
     (define-key map "\C-c\C-z"   'q-customize)
     (define-key map "\C-c\C-c"   'comment-region)
-    (define-key map "\C-c\C-g"   'q-rescan-project)
+    ;(define-key map "\C-c\C-g"   'q-rescan-project)
     (define-key map "\C-c`"       'q-next-error)
     map)
   "Keymap for q major mode.")
