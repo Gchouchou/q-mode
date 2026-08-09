@@ -1274,8 +1274,7 @@ see a consistent view without re-reading any unchanged files."
         (dolist (sym (plist-get artifacts :symbols)) (puthash sym t candidates))))
     (q--project-plist-put
      :definition-index      def-index
-     :reference-index       ref-index
-     :completion-candidates candidates)))
+     :reference-index       ref-index)))
 
 ;; full and incremental rescans
 
