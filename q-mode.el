@@ -298,6 +298,12 @@ that file is committed to version control."
   :type 'string
   :group 'q-qcon)
 
+(defcustom q-ignored-scan-projects nil
+  "List of projects to not scan.
+Scans will no opt."
+  :safe '(repeat string)
+  :type '(repeat string))
+
 (defun q-customize ()
   "Customize `q-mode'."
   (interactive)
@@ -1284,7 +1290,9 @@ REASON is a short string describing why the rescan was triggered.
 Files whose mtime is unchanged are reused from the existing cache.
 If FORCE is non-nil, run even if the scan-state appears current.
 Emits a progress message before scanning and a timing message after."
-  (when (buffer-live-p buf)
+  (when (and (buffer-live-p buf)
+             (q--project-key)
+             (not (cl-find (q--project-key) q-ignored-scan-projects)))
     (with-current-buffer buf
       (message "q: %s, enumerating project files..." reason)
       (redisplay)
@@ -1343,7 +1351,9 @@ Emits a progress message before scanning and a timing message after."
   "Re-scan only FILE in the shared cache for BUF, then rebuild merged indexes.
 When FILE is nil, re-scans the current buffer's in-memory content.
 Falls back to a full rescan when no per-file sub-index exists yet."
-  (when (buffer-live-p buf)
+  (when (and (buffer-live-p buf)
+             (q--project-key)
+             (not (cl-find (q--project-key) q-ignored-scan-projects)))
     (with-current-buffer buf
       (let* ((file-index (q--project-plist-get :file-index))
              (key        (or file :buffer)))
