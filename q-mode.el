@@ -304,6 +304,11 @@ Scans will no opt."
   :safe '(repeat string)
   :type '(repeat string))
 
+(defcustom q-always-scan-files nil
+  "List of files to always include in scan."
+  :type '(repeat file)
+  :safe '(repeat file))
+
 (defun q-customize ()
   "Customize `q-mode'."
   (interactive)
@@ -1054,6 +1059,8 @@ Uses a visiting buffer when modified; otherwise reads from disk."
   (let ((seen (make-hash-table :test #'equal))
         (queue nil)
         (all nil))
+    ;; add files that should always be scanned
+    (dolist (file q-always-scan-files) (puthash file t seen))
     (cl-labels ((enqueue-unique (file)
                   (unless (gethash file seen)
                     (puthash file t seen)
