@@ -1060,7 +1060,10 @@ Uses a visiting buffer when modified; otherwise reads from disk."
         (queue nil)
         (all nil))
     ;; add files that should always be scanned
-    (dolist (file q-always-scan-files) (puthash file t seen))
+    (dolist (file q-always-scan-files)
+      (puthash file t seen)
+      (push file queue)
+      (push file all)) 
     (cl-labels ((enqueue-unique (file)
                   (unless (gethash file seen)
                     (puthash file t seen)
