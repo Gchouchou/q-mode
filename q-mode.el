@@ -1299,7 +1299,7 @@ If FORCE is non-nil, run even if the scan-state appears current.
 Emits a progress message before scanning and a timing message after."
   (when (and (buffer-live-p buf)
              (q--project-key)
-             (not (cl-find (q--project-key) q-ignored-scan-projects)))
+             (not (cl-find (q--project-key) q-ignored-scan-projects :test #'equal)))
     (with-current-buffer buf
       (message "q: %s, enumerating project files..." reason)
       (redisplay)
@@ -1360,7 +1360,7 @@ When FILE is nil, re-scans the current buffer's in-memory content.
 Falls back to a full rescan when no per-file sub-index exists yet."
   (when (and (buffer-live-p buf)
              (q--project-key)
-             (not (cl-find (q--project-key) q-ignored-scan-projects)))
+             (not (cl-find (q--project-key) q-ignored-scan-projects :test #'equal)))
     (with-current-buffer buf
       (let* ((file-index (q--project-plist-get :file-index))
              (key        (or file :buffer)))
